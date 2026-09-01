@@ -1,0 +1,66 @@
+    /* Base */
+        body {
+            font-family: 'DM Sans', sans-serif;
+            margin: 0;
+        }
+
+        /* Hero */
+        .hero {
+            position: relative;
+            width: 100%;
+            min-height: calc(70 * min(var(--vh, 1vh), 1vh));
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(15,53,100,0.85), rgba(15,53,100,0.5));
+        }
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Cards */
+        .service-card {
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .service-card:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+            transform: translateY(-2px);
+        }
+        .service-card-img {
+            width: 100%;
+            height: 12rem;
+            object-fit: cover;
+        }
+
+        /* Form section */
+        .form-section {
+            background: #f0f4f8;
+        }
+        .form-input {
+            width: 100%;
+            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+            outline: none;
+            transition: box-shadow 0.2s;
+        }
+        .form-input:focus {
+            box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
+        }
+
+        /* CTA button hover */
+        .cta-hover:hover {
+            transform: scale(1.05);
+        }
