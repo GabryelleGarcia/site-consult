@@ -1,66 +1,849 @@
-    /* Base */
-        body {
-            font-family: 'DM Sans', sans-serif;
-            margin: 0;
-        }
+/* =========================================================
+   CONSULT SAÚDE
+   CSS COMPLETO DO SITE
+   Estilo: moderno, sofisticado e profissional
+   ========================================================= */
 
-        /* Hero */
-        .hero {
-            position: relative;
-            width: 100%;
-            min-height: calc(70 * min(var(--vh, 1vh), 1vh));
-        }
-        .hero-bg {
-            position: absolute;
-            inset: 0;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-        .hero-overlay {
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, rgba(15,53,100,0.85), rgba(15,53,100,0.5));
-        }
-        .hero-content {
-            position: relative;
-            z-index: 10;
-        }
 
-        /* Cards */
-        .service-card {
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-            transition: box-shadow 0.3s, transform 0.3s;
-        }
-        .service-card:hover {
-            box-shadow: 0 8px 24px rgba(0,0,0,0.14);
-            transform: translateY(-2px);
-        }
-        .service-card-img {
-            width: 100%;
-            height: 12rem;
-            object-fit: cover;
-        }
+/* =========================================================
+   1. RESET E CONFIGURAÇÕES GERAIS
+   ========================================================= */
 
-        /* Form section */
-        .form-section {
-            background: #f0f4f8;
-        }
-        .form-input {
-            width: 100%;
-            border: 1px solid #d1d5db;
-            border-radius: 0.5rem;
-            padding: 0.75rem 1rem;
-            outline: none;
-            transition: box-shadow 0.2s;
-        }
-        .form-input:focus {
-            box-shadow: 0 0 0 3px rgba(59,130,246,0.3);
-        }
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-        /* CTA button hover */
-        .cta-hover:hover {
-            transform: scale(1.05);
-        }
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Montserrat", sans-serif;
+    background-color: #f7faff;
+    color: #17324d;
+    line-height: 1.6;
+}
+
+button,
+input {
+    -webkit-tap-highlight-color: transparent;
+}
+
+
+/* =========================================================
+   2. HEADER / LOGO
+   ========================================================= */
+
+.logo-container {
+    width: 100%;
+    min-height: 100px;
+
+    padding: 18px 7%;
+
+    background-color: #ffffff;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    border-bottom: 1px solid #e8eef5;
+}
+
+
+/* LOGO */
+
+.logo {
+    width: 180px;
+    height: auto;
+
+    object-fit: contain;
+
+    order: 1;
+}
+
+
+/* TEXTO DO HEADER */
+
+.text-logo {
+    font-size: 14px;
+    font-weight: 500;
+
+    color: #536b82;
+
+    order: 0;
+}
+
+
+/* BOTÃO DO HEADER */
+
+.cotação-button-logo {
+    order: 2;
+
+    border: none;
+    border-radius: 8px;
+
+    padding: 13px 24px;
+
+    background: #0b75bb;
+    color: #ffffff;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+.cotação-button-logo:hover {
+    background: #07598f;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(11, 117, 187, 0.20);
+}
+
+
+/* =========================================================
+   3. HERO — FOTO + FORMULÁRIO
+   ========================================================= */
+
+.fomulario-photo-container {
+    width: 100%;
+    max-width: 1200px;
+
+    margin: 70px auto;
+
+    padding: 0 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 70px;
+}
+
+
+/* CONTAINER DA FOTO */
+
+.fomulario-photo-container > div {
+    flex: 1;
+    min-width: 0;
+}
+
+
+/* FOTO */
+
+.photo {
+    width: 100%;
+    max-width: 560px;
+
+    height: 520px;
+
+    display: block;
+
+    object-fit: cover;
+
+    border-radius: 24px;
+
+    box-shadow: 0 20px 50px rgba(24, 58, 90, 0.15);
+}
+
+
+/* =========================================================
+   4. FORMULÁRIOS
+   ========================================================= */
+
+.preenchimento-container-1,
+.preenchimento-container-2 {
+
+    width: 100%;
+    max-width: 480px;
+
+    padding: 38px;
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    box-shadow: 0 15px 45px rgba(30, 68, 100, 0.12);
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 13px;
+}
+
+
+/* =========================================================
+   5. TÍTULOS DOS FORMULÁRIOS
+   ========================================================= */
+
+.form-title {
+    position: relative;
+
+    margin: 0 0 8px;
+
+    color: #17324d;
+
+    font-size: 24px;
+    font-weight: 750;
+
+    line-height: 1.3;
+
+    letter-spacing: -0.5px;
+}
+
+
+/* DETALHE AZUL ACIMA DO TÍTULO */
+
+.form-title::before {
+    content: "";
+
+    display: block;
+
+    width: 42px;
+    height: 4px;
+
+    margin-bottom: 14px;
+
+    background: #0b75bb;
+
+    border-radius: 10px;
+}
+
+
+/* SUBTÍTULO DO FORMULÁRIO */
+
+.form-subtitle {
+    margin: 0 0 18px;
+
+    color: #718397;
+
+    font-size: 13px;
+    font-weight: 400;
+
+    line-height: 1.6;
+}
+
+
+/* TÍTULO DO PRIMEIRO FORMULÁRIO */
+
+.preenchimento-container-1 .form-title {
+    color: #17324d;
+}
+
+
+/* TÍTULO DO SEGUNDO FORMULÁRIO */
+
+.preenchimento-container-2 .form-title {
+    color: #17324d;
+}
+
+
+/* =========================================================
+   6. CAMPOS DOS FORMULÁRIOS
+   ========================================================= */
+
+.preenchimento-container-1 input[type="text"],
+.preenchimento-container-1 input[type="email"],
+.preenchimento-container-1 input[type="tel"],
+.preenchimento-container-1 input[type="age"],
+.preenchimento-container-1 input[type="number"],
+
+.preenchimento-container-2 input[type="text"],
+.preenchimento-container-2 input[type="email"],
+.preenchimento-container-2 input[type="tel"],
+.preenchimento-container-2 input[type="age"],
+.preenchimento-container-2 input[type="number"] {
+
+    width: 100%;
+    height: 50px;
+
+    padding: 0 16px;
+
+    border: 1px solid #d9e3ed;
+
+    border-radius: 8px;
+
+    background: #fbfdff;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 13px;
+
+    color: #17324d;
+
+    outline: none;
+
+    transition: all 0.25s ease;
+}
+
+
+/* CAMPO COM FOCO */
+
+.preenchimento-container-1 input:focus,
+.preenchimento-container-2 input:focus {
+
+    border-color: #0b75bb;
+
+    background: #ffffff;
+
+    box-shadow: 0 0 0 3px rgba(11, 117, 187, 0.08);
+}
+
+
+/* PLACEHOLDER */
+
+.preenchimento-container-1 input::placeholder,
+.preenchimento-container-2 input::placeholder {
+
+    color: #8b9bab;
+}
+
+
+/* =========================================================
+   7. LABELS
+   ========================================================= */
+
+.preenchimento-container-1 label,
+.preenchimento-container-2 label {
+
+    margin-top: 8px;
+
+    color: #24445f;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+/* =========================================================
+   8. RADIO BUTTONS E CHECKBOXES
+   ========================================================= */
+
+.preenchimento-container-1 input[type="radio"],
+.preenchimento-container-1 input[type="checkbox"],
+
+.preenchimento-container-2 input[type="radio"],
+.preenchimento-container-2 input[type="checkbox"] {
+
+    width: auto;
+    height: auto;
+
+    accent-color: #0b75bb;
+
+    margin-right: 5px;
+}
+
+
+/* =========================================================
+   9. BOTÃO DE COTAÇÃO
+   ========================================================= */
+
+.cotação-button {
+
+    width: 100%;
+    min-height: 54px;
+
+    margin-top: 12px;
+
+    border: none;
+
+    border-radius: 9px;
+
+    background: #0b75bb;
+
+    color: #ffffff;
+
+    font-family: "Montserrat", sans-serif;
+
+    font-size: 14px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: all 0.3s ease;
+}
+
+
+/* HOVER */
+
+.cotação-button:hover {
+
+    background: #07598f;
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 25px rgba(11, 117, 187, 0.25);
+}
+
+
+/* CLIQUE */
+
+.cotação-button:active {
+
+    transform: translateY(0);
+}
+
+
+/* =========================================================
+   10. APRESENTAÇÃO DA CONSULT SAÚDE
+   ========================================================= */
+
+.Apresentação-consult-container {
+
+    width: 100%;
+    max-width: 1050px;
+
+    margin: 100px auto 60px;
+
+    padding: 0 30px;
+
+    text-align: center;
+}
+
+
+/* TÍTULO PRINCIPAL */
+
+.Apresentação-consult-container h1 {
+
+    margin-bottom: 10px;
+
+    color: #0b75bb;
+
+    font-size: 38px;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+
+/* SUBTÍTULO */
+
+.Apresentação-consult-container h2 {
+
+    margin-bottom: 25px;
+
+    color: #17324d;
+
+    font-size: 23px;
+
+    font-weight: 600;
+}
+
+
+/* TEXTO */
+
+.Apresentação-consult-container p {
+
+    max-width: 900px;
+
+    margin: 0 auto;
+
+    color: #60758a;
+
+    font-size: 15px;
+
+    font-weight: 400;
+
+    line-height: 1.9;
+}
+
+
+/* =========================================================
+   11. IMAGEM DAS OPERADORAS
+   ========================================================= */
+
+.operadoras {
+
+    width: 100%;
+    max-width: 1100px;
+
+    height: auto;
+
+    display: block;
+
+    margin: 40px auto 70px;
+
+    padding: 0 30px;
+
+    object-fit: contain;
+}
+
+
+/* =========================================================
+   12. SEGUNDO FORMULÁRIO
+   ========================================================= */
+
+.preenchimento-container-2 {
+
+    margin: 0 auto 100px;
+
+    position: relative;
+}
+
+
+/* =========================================================
+   13. CONTATOS / RODAPÉ
+   ========================================================= */
+
+.contatos-footer {
+
+    width: 100%;
+
+    padding: 35px 20px;
+
+    background-color: #17324d;
+
+    color: #ffffff;
+
+    text-align: center;
+}
+
+
+/* TÍTULO DO RODAPÉ */
+
+.contatos-footer p:first-child {
+
+    margin-bottom: 18px;
+
+    color: #ffffff;
+
+    font-size: 18px;
+
+    font-weight: 700;
+}
+
+
+/* LINHAS DE CONTATO */
+
+.contatos-footer p:not(:first-child) {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 12px 30px;
+
+    margin-bottom: 10px;
+
+    color: #dce8f2;
+
+    font-size: 13px;
+}
+
+
+/* CONTATOS */
+
+.contatos-footer span {
+
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   14. TABLET
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .logo-container {
+
+        padding: 18px 4%;
+    }
+
+
+    .text-logo {
+
+        display: none;
+    }
+
+
+    .fomulario-photo-container {
+
+        gap: 35px;
+
+        padding: 0 20px;
+    }
+
+
+    .photo {
+
+        height: 460px;
+    }
+
+
+    .preenchimento-container-1,
+    .preenchimento-container-2 {
+
+        padding: 30px;
+    }
+
+
+    .Apresentação-consult-container {
+
+        margin-top: 70px;
+    }
+}
+
+
+/* =========================================================
+   15. CELULAR
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    body {
+
+        overflow-x: hidden;
+    }
+
+
+    /* HEADER */
+
+    .logo-container {
+
+        min-height: 85px;
+
+        padding: 14px 20px;
+
+        gap: 12px;
+    }
+
+
+    .logo {
+
+        width: 145px;
+    }
+
+
+    .cotação-button-logo {
+
+        padding: 11px 15px;
+
+        font-size: 11px;
+    }
+
+
+    /* HERO */
+
+    .fomulario-photo-container {
+
+        width: 100%;
+
+        margin: 35px auto 60px;
+
+        padding: 0 18px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        gap: 30px;
+    }
+
+
+    /* FOTO */
+
+    .fomulario-photo-container > div {
+
+        width: 100%;
+    }
+
+
+    .photo {
+
+        width: 100%;
+
+        max-width: none;
+
+        height: 280px;
+
+        border-radius: 18px;
+    }
+
+
+    /* FORMULÁRIOS */
+
+    .preenchimento-container-1,
+    .preenchimento-container-2 {
+
+        width: 100%;
+
+        max-width: none;
+
+        padding: 25px 20px;
+
+        border-radius: 16px;
+    }
+
+
+    /* TÍTULOS */
+
+    .form-title {
+
+        font-size: 21px;
+
+        letter-spacing: -0.3px;
+    }
+
+
+    .form-title::before {
+
+        width: 35px;
+
+        height: 3px;
+
+        margin-bottom: 11px;
+    }
+
+
+    .form-subtitle {
+
+        font-size: 12px;
+
+        margin-bottom: 15px;
+    }
+
+
+    /* APRESENTAÇÃO */
+
+    .Apresentação-consult-container {
+
+        margin: 60px auto 40px;
+
+        padding: 0 22px;
+    }
+
+
+    .Apresentação-consult-container h1 {
+
+        font-size: 29px;
+    }
+
+
+    .Apresentação-consult-container h2 {
+
+        font-size: 19px;
+
+        line-height: 1.4;
+    }
+
+
+    .Apresentação-consult-container p {
+
+        font-size: 13px;
+
+        line-height: 1.8;
+
+        text-align: justify;
+    }
+
+
+    /* OPERADORAS */
+
+    .operadoras {
+
+        margin: 30px auto 50px;
+
+        padding: 0 20px;
+    }
+
+
+    /* SEGUNDO FORMULÁRIO */
+
+    .preenchimento-container-2 {
+
+        margin-bottom: 60px;
+    }
+
+
+    /* RODAPÉ */
+
+    .contatos-footer {
+
+        padding: 30px 15px;
+    }
+
+
+    .contatos-footer p:first-child {
+
+        font-size: 16px;
+    }
+
+
+    .contatos-footer p:not(:first-child) {
+
+        flex-direction: column;
+
+        gap: 8px;
+
+        font-size: 12px;
+    }
+}
+
+
+/* =========================================================
+   16. CELULARES PEQUENOS
+   ========================================================= */
+
+@media (max-width: 400px) {
+
+    .logo {
+
+        width: 125px;
+    }
+
+
+    .cotação-button-logo {
+
+        padding: 10px 12px;
+
+        font-size: 10px;
+    }
+
+
+    .photo {
+
+        height: 240px;
+    }
+
+
+    .preenchimento-container-1,
+    .preenchimento-container-2 {
+
+        padding: 22px 16px;
+    }
+
+
+    .form-title {
+
+        font-size: 20px;
+    }
+
+
+    .Apresentação-consult-container h1 {
+
+        font-size: 26px;
+    }
+
+
+    .Apresentação-consult-container h2 {
+
+        font-size: 17px;
+    }
+}
