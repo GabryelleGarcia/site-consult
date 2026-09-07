@@ -9,7 +9,7 @@
 // ==========================================
 
 // Durante o desenvolvimento local:
-const API_URL = "http://localhost:3000/api/leads";
+const API_URL ="https://consult-saude-backend.onrender.com/api/leads";
 
 // Quando o backend estiver publicado,
 // substituiremos a URL acima pelo endereço real.
