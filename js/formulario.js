@@ -11,11 +11,34 @@
 // Durante o desenvolvimento local:
 const API_URL ="https://consult-saude-backend.onrender.com/api/leads";
 
-// Quando o backend estiver publicado,
-// substituiremos a URL acima pelo endereço real.
+// ==========================================
+// CONVERSÃO DO GOOGLE ADS
+// ==========================================
 
+function registrarConversaoGoogleAds() {
 
+    if (typeof gtag !== "function") {
 
+        console.warn(
+            "A tag do Google Ads ainda não foi carregada."
+        );
+
+        return;
+
+    }
+
+    gtag("event", "conversion", {
+
+        send_to:
+            "AW-18422949406/k7QeCM7L24EdEJ7M39BE",
+
+        value: 1.0,
+
+        currency: "BRL"
+
+    });
+
+}
 // ==========================================
 // SELECIONA OS FORMULÁRIOS
 // ==========================================
@@ -30,7 +53,8 @@ const formularios = document.querySelectorAll(
 // FUNÇÃO PARA MOSTRAR MENSAGEM
 // ==========================================
 
-function mostrarMensagem(formulario, mensagem, tipo) {
+function mostrarMensagem(formulario, mensagem, tipo)
+ {
 
     const elementoMensagem =
         formulario.querySelector(".form-mensagem");
@@ -241,6 +265,9 @@ formularios.forEach((formulario) => {
                     "✓ Solicitação enviada com sucesso! Nossa equipe entrará em contato em breve.",
                     "sucesso"
                 );
+                // Registra a conversão somente após
+                // o servidor confirmar o recebimento do lead
+                registrarConversaoGoogleAds();
 
 
                 // ----------------------------------
