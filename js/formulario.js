@@ -1,435 +1,154 @@
-// ==========================================
-// CONSULT SAÚDE
-// FORMULÁRIO DE COTAÇÃO / CAPTURA DE LEADS
-// ==========================================
+// Integração com o backend e com a conversão do Google Ads.
+const API_URL = "https://consult-saude-backend.onrender.com/api/leads";
 
-
-// ==========================================
-// CONFIGURAÇÃO DA API
-// ==========================================
-
-// Durante o desenvolvimento local:
-const API_URL ="https://consult-saude-backend.onrender.com/api/leads";
-
-// ==========================================
-// CONVERSÃO DO GOOGLE ADS
-// ==========================================
+const formulario = document.querySelector("#formulario-cotacao");
 
 function registrarConversaoGoogleAds() {
+  if (typeof gtag !== "function") {
+    return;
+  }
 
-    if (typeof gtag !== "function") {
-
-        console.warn(
-            "A tag do Google Ads ainda não foi carregada."
-        );
-
-        return;
-
-    }
-
-    gtag("event", "conversion", {
-
-        send_to:
-            "AW-18422949406/k7QeCM7L24EdEJ7M39BE",
-
-        value: 1.0,
-
-        currency: "BRL"
-
-    });
-
-}
-// ==========================================
-// SELECIONA OS FORMULÁRIOS
-// ==========================================
-
-const formularios = document.querySelectorAll(
-    "#formulario-cotacao, #formulario-cotacao-2"
-);
-
-
-
-// ==========================================
-// FUNÇÃO PARA MOSTRAR MENSAGEM
-// ==========================================
-
-function mostrarMensagem(formulario, mensagem, tipo)
- {
-
-    const elementoMensagem =
-        formulario.querySelector(".form-mensagem");
-
-    if (!elementoMensagem) {
-        return;
-    }
-
-    elementoMensagem.textContent = mensagem;
-
-    elementoMensagem.className =
-        `form-mensagem ${tipo}`;
-
+  gtag("event", "conversion", {
+    send_to: "AW-18422949406/k7QeCM7L24EdEJ7M39BE",
+    value: 1.0,
+    currency: "BRL"
+  });
 }
 
+if (formulario) {
+  const mensagem = formulario.querySelector(".form-mensagem");
+  const botao = formulario.querySelector('button[type="submit"]');
+  const telefone = formulario.querySelector('input[name="telefone"]');
+  const radiosPlano = formulario.querySelectorAll(
+    'input[name="possuiPlano"]'
+  );
+  const camposPlanoAtual = formulario.querySelector(
+    "#campos-plano-atual"
+  );
+  const operadoraAtual = formulario.querySelector(
+    'input[name="operadoraAtual"]'
+  );
 
+  function mostrarMensagem(texto, tipo = "") {
+    mensagem.textContent = texto;
 
-// ==========================================
-// FUNÇÃO PARA LIMPAR MENSAGEM
-// ==========================================
+    mensagem.className = tipo
+      ? `form-mensagem ${tipo}`
+      : "form-mensagem";
 
-function limparMensagem(formulario) {
+    mensagem.setAttribute(
+      "role",
+      tipo === "erro" ? "alert" : "status"
+    );
+  }
 
-    const elementoMensagem =
-        formulario.querySelector(".form-mensagem");
+  // Mostra a operadora somente para quem já possui plano.
+  function atualizarCampoOperadora() {
+    const possuiPlano =
+      formulario.querySelector(
+        'input[name="possuiPlano"]:checked'
+      )?.value === "Sim";
 
-    if (!elementoMensagem) {
-        return;
+    camposPlanoAtual.hidden = !possuiPlano;
+    operadoraAtual.disabled = !possuiPlano;
+
+    if (!possuiPlano) {
+      operadoraAtual.value = "";
     }
+  }
 
-    elementoMensagem.textContent = "";
+  radiosPlano.forEach((radio) => {
+    radio.addEventListener("change", atualizarCampoOperadora);
+  });
 
-    elementoMensagem.className =
-        "form-mensagem";
+  atualizarCampoOperadora();
 
-}
+  // Formata o telefone enquanto a pessoa digita.
+  telefone.addEventListener("input", () => {
+    const digitos = telefone.value
+      .replace(/\D/g, "")
+      .slice(0, 11);
 
-
-
-// ==========================================
-// FUNÇÃO PARA ALTERAR ESTADO DO BOTÃO
-// ==========================================
-
-function alterarBotao(botao, carregando) {
-
-    if (carregando) {
-
-        botao.disabled = true;
-
-        botao.dataset.textoOriginal =
-            botao.textContent;
-
-        botao.textContent =
-            "Enviando...";
-
+    if (digitos.length <= 2) {
+      telefone.value = digitos ? `(${digitos}` : "";
+    } else if (digitos.length <= 6) {
+      telefone.value =
+        `(${digitos.slice(0, 2)}) ${digitos.slice(2)}`;
     } else {
+      const corte = digitos.length > 10 ? 7 : 6;
 
-        botao.disabled = false;
+      telefone.value =
+        `(${digitos.slice(0, 2)}) ` +
+        `${digitos.slice(2, corte)}-` +
+        `${digitos.slice(corte)}`;
+    }
+  });
 
-        botao.textContent =
-            botao.dataset.textoOriginal ||
-            "Solicitar Cotação";
+  formulario.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    mostrarMensagem("");
 
+    if (!formulario.checkValidity()) {
+      formulario.reportValidity();
+      return;
     }
 
+    botao.disabled = true;
+
+    const textoOriginal = botao.textContent;
+    botao.textContent = "Enviando...";
+
+    try {
+      const dados = Object.fromEntries(
+        new FormData(formulario).entries()
+      );
+
+      // Mantém o valor usado anteriormente pelo backend.
+      dados.origem = "Formulário principal";
+
+      const resposta = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(dados)
+      });
+
+      let resultado = {};
+
+      try {
+        resultado = await resposta.json();
+      } catch {
+        // Algumas respostas de erro não contêm JSON.
+      }
+
+      if (!resposta.ok) {
+        throw new Error(
+          resultado.mensagem ||
+          "Falha no envio da cotação."
+        );
+      }
+
+      mostrarMensagem(
+        "✓ Solicitação enviada com sucesso! Nossa equipe entrará em contato em breve.",
+        "sucesso"
+      );
+
+      // Só registra a conversão após o backend aceitar o lead.
+      registrarConversaoGoogleAds();
+
+      formulario.reset();
+      atualizarCampoOperadora();
+    } catch (erro) {
+      console.error("Erro ao enviar lead:", erro);
+
+      mostrarMensagem(
+        "Não foi possível enviar sua solicitação. Verifique sua conexão e tente novamente.",
+        "erro"
+      );
+    } finally {
+      botao.disabled = false;
+      botao.textContent = textoOriginal;
+    }
+  });
 }
-
-
-
-// ==========================================
-// ENVIO DOS FORMULÁRIOS
-// ==========================================
-
-formularios.forEach((formulario) => {
-
-    formulario.addEventListener(
-        "submit",
-        async function (event) {
-
-            event.preventDefault();
-
-            limparMensagem(formulario);
-
-
-            // --------------------------------------
-            // BOTÃO DE ENVIO
-            // --------------------------------------
-
-            const botao =
-                formulario.querySelector(
-                    'button[type="submit"]'
-                );
-
-
-            if (!botao) {
-                return;
-            }
-
-
-            // --------------------------------------
-            // VALIDAÇÃO NATIVA DO HTML
-            // --------------------------------------
-
-            if (!formulario.checkValidity()) {
-
-                formulario.reportValidity();
-
-                return;
-
-            }
-
-
-            // --------------------------------------
-            // ATIVA ESTADO DE ENVIO
-            // --------------------------------------
-
-            alterarBotao(botao, true);
-
-
-            try {
-
-                // ----------------------------------
-                // CAPTURA OS DADOS
-                // ----------------------------------
-
-                const dadosFormulario =
-                    new FormData(formulario);
-
-
-                // ----------------------------------
-                // CONVERTE PARA OBJETO
-                // ----------------------------------
-
-                const dados =
-                    Object.fromEntries(
-                        dadosFormulario.entries()
-                    );
-
-
-                // ----------------------------------
-                // IDENTIFICA QUAL FORMULÁRIO
-                // GEROU O LEAD
-                // ----------------------------------
-
-                dados.origem =
-                    formulario.id === "formulario-cotacao"
-                        ? "Formulário principal"
-                        : "Formulário secundário";
-
-
-                // ----------------------------------
-                // ENVIA PARA O BACKEND
-                // ----------------------------------
-
-                const resposta =
-                    await fetch(API_URL, {
-
-                        method: "POST",
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body: JSON.stringify(dados)
-
-                    });
-
-
-                // ----------------------------------
-                // TENTA LER A RESPOSTA
-                // ----------------------------------
-
-                let resultado;
-
-                try {
-
-                    resultado =
-                        await resposta.json();
-
-                } catch {
-
-                    resultado = {};
-
-                }
-
-
-                // ----------------------------------
-                // VERIFICA SE DEU ERRO
-                // ----------------------------------
-
-                if (!resposta.ok) {
-
-                    throw new Error(
-                        resultado.mensagem ||
-                        "Não foi possível enviar sua solicitação."
-                    );
-
-                }
-
-
-                // ----------------------------------
-                // SUCESSO
-                // ----------------------------------
-
-                mostrarMensagem(
-                    formulario,
-                    "✓ Solicitação enviada com sucesso! Nossa equipe entrará em contato em breve.",
-                    "sucesso"
-                );
-                // Registra a conversão somente após
-                // o servidor confirmar o recebimento do lead
-                registrarConversaoGoogleAds();
-
-
-                // ----------------------------------
-                // LIMPA O FORMULÁRIO
-                // ----------------------------------
-
-                formulario.reset();
-
-
-                // ----------------------------------
-                // VOLTA O FOCO PARA O PRIMEIRO CAMPO
-                // ----------------------------------
-
-                const primeiroCampo =
-                    formulario.querySelector(
-                        "input"
-                    );
-
-                if (primeiroCampo) {
-                    primeiroCampo.focus();
-                }
-
-
-            } catch (erro) {
-
-                // ----------------------------------
-                // ERRO
-                // ----------------------------------
-
-                console.error(
-                    "Erro ao enviar lead:",
-                    erro
-                );
-
-
-                mostrarMensagem(
-                    formulario,
-                    "Não foi possível enviar sua solicitação. Verifique sua conexão e tente novamente.",
-                    "erro"
-                );
-
-
-            } finally {
-
-                // ----------------------------------
-                // REATIVA O BOTÃO
-                // ----------------------------------
-
-                alterarBotao(botao, false);
-
-            }
-
-        }
-    );
-
-});
-
-
-
-// ==========================================
-// MÁSCARA DE TELEFONE
-// ==========================================
-
-const telefones =
-    document.querySelectorAll(
-        'input[name="telefone"]'
-    );
-
-
-telefones.forEach((campo) => {
-
-    campo.addEventListener(
-        "input",
-        function () {
-
-            let valor =
-                campo.value.replace(/\D/g, "");
-
-
-            // Limita a 11 números
-            valor =
-                valor.substring(0, 11);
-
-
-            if (valor.length <= 10) {
-
-                valor =
-                    valor.replace(
-                        /^(\d{2})(\d{4})(\d{0,4}).*/,
-                        "($1) $2-$3"
-                    );
-
-            } else {
-
-                valor =
-                    valor.replace(
-                        /^(\d{2})(\d{5})(\d{0,4}).*/,
-                        "($1) $2-$3"
-                    );
-
-            }
-
-
-            campo.value = valor;
-
-        }
-    );
-
-});
-
-
-
-// ==========================================
-// BOTÃO "SOLICITAR COTAÇÃO" DO TOPO
-// ==========================================
-
-const botaoTopo =
-    document.querySelector(
-        ".cotação-button-logo"
-    );
-
-
-if (botaoTopo) {
-
-    botaoTopo.addEventListener(
-        "click",
-        function () {
-
-            const formulario =
-                document.querySelector(
-                    "#formulario-cotacao"
-                );
-
-
-            if (formulario) {
-
-                formulario.scrollIntoView({
-                    behavior: "smooth",
-                    block: "center"
-                });
-
-
-                const primeiroCampo =
-                    formulario.querySelector(
-                        "input"
-                    );
-
-
-                if (primeiroCampo) {
-
-                    setTimeout(() => {
-
-                        primeiroCampo.focus();
-
-                    }, 600);
-
-                }
-
-            }
-
-        }
-    );
-
-}
-
