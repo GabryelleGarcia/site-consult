@@ -15,6 +15,22 @@ const PORT = process.env.PORT || 3000;
 // Headers de segurança
 app.use(helmet());
 
+// ===============================
+// ROTA DE LEADS — JOSÉ WALTER
+// ===============================
+
+const registrarRotasJwc = require("./Rotas/jwc");
+
+app.use(
+    "/enviar-lead-jwc",
+    express.urlencoded({
+        extended: false,
+        limit: "20kb"
+    })
+);
+
+registrarRotasJwc(app);
+
 // Limita tamanho do JSON recebido
 app.use(express.json({ limit: "20kb" }));
 
